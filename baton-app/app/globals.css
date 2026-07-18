@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: "Archivo", system-ui, sans-serif;
+  background:
+    radial-gradient(1100px 600px at 80% -10%, rgba(233, 177, 82, 0.07), transparent 60%),
+    linear-gradient(180deg, #101e33 0%, #0b1524 100%);
+  background-attachment: fixed;
+}
+
+.font-display {
+  font-family: "Archivo Black", "Archivo", system-ui, sans-serif;
+}
+
+.card {
+  @apply rounded-2xl border border-steel/30 bg-panel/80 p-6 backdrop-blur;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed;
+}
+
+.btn-brass {
+  @apply btn bg-brass text-ink hover:bg-brassLight;
+}
+
+.btn-ghost {
+  @apply btn border border-steel/40 text-cream hover:border-brass/60 hover:text-brass;
+}
+
+.input {
+  @apply w-full rounded-xl border border-steel/40 bg-ink/60 px-4 py-3 text-cream placeholder:text-steel focus:border-brass focus:outline-none;
+}
+
+.label {
+  @apply mb-1 block text-xs font-semibold uppercase tracking-widest text-steel;
+}

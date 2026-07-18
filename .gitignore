@@ -1,0 +1,17 @@
+# Foundry
+cache/
+out/
+/lib/
+foundry.lock
+
+# Node / Next.js
+node_modules/
+.next/
+
+# Secrets
+.env
+.env.local
+*.env
+
+# Windows metadata
+*Zone.Identifier*
