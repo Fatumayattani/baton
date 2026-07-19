@@ -23,6 +23,7 @@ export const BATON_ABI = [
   "function claim(uint256 estateId, uint256 beneficiaryIndex, bytes secret)",
   "function estates(uint256) view returns (address owner, address guardian, uint64 lastHeartbeat, uint64 heartbeatInterval, uint64 gracePeriod, bool activated, bool cancelled)",
   "function balances(uint256, address) view returns (uint256)",
+  "function snapshots(uint256, address) view returns (uint256)",
   "function beneficiaries(uint256) view returns (tuple(bytes32 commitment, uint16 shareBps, bool claimed, address claimedBy)[])",
   "function timeRemaining(uint256) view returns (uint256)",
   "function isExpired(uint256) view returns (bool)",
@@ -119,9 +120,10 @@ export function commitmentOf(secretHex: string): string {
   return ethers.keccak256(secretHex);
 }
 
-export function claimLink(estateId: string, index: number, secret: string) {
+export function claimLink(estateId: string, index: number, secret: string, name?: string) {
   const base = typeof window !== "undefined" ? window.location.origin : "";
-  return `${base}/claim?e=${estateId}&i=${index}&s=${secret}`;
+  const n = name ? `&n=${encodeURIComponent(name)}` : "";
+  return `${base}/claim?e=${estateId}&i=${index}&s=${secret}${n}`;
 }
 
 export function fmtCountdown(totalSeconds: number): string {

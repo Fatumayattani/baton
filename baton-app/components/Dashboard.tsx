@@ -131,7 +131,7 @@ export default function Dashboard({ meta, address, onReset }: Props) {
     run("cancel", async () => (await batonWrite()).cancelEstate(id));
 
   function copyLink(i: number) {
-    navigator.clipboard.writeText(claimLink(id, i, meta.heirs[i].secret));
+    navigator.clipboard.writeText(claimLink(id, i, meta.heirs[i].secret, meta.heirs[i].name));
     setCopied(i);
     setTimeout(() => setCopied(-1), 1500);
   }
