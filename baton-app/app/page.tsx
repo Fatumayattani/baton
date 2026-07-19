@@ -39,6 +39,22 @@ export default function Landing() {
 
   return (
     <main className="relative mx-auto flex min-h-screen max-w-xl flex-col justify-center px-6 py-16">
+      <nav className="fixed left-0 right-0 top-0 z-10 border-b border-steel/15 bg-ink/70 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3">
+          <span className="font-display text-lg tracking-tight">BATON</span>
+          <div className="flex items-center gap-6 text-sm font-semibold text-steel">
+            <a className="transition hover:text-brass" href="/docs">Docs</a>
+            <a className="transition hover:text-brass" href="/pitch">Pitch</a>
+            <a
+              className="transition hover:text-brass"
+              href="https://github.com/fatumayattani/baton"
+              target="_blank"
+            >
+              GitHub
+            </a>
+          </div>
+        </div>
+      </nav>
       {/* handoff line motif */}
       <div
         className="pointer-events-none fixed inset-y-0 right-[8%] hidden w-px lg:block"
