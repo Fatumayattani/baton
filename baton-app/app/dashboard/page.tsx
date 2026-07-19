@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import BatonMark from "@/components/BatonMark";
 import CreateBaton from "@/components/CreateBaton";
 import Dashboard from "@/components/Dashboard";
 import { getMagic, loadMeta, type BatonMeta } from "@/lib/baton";
@@ -48,11 +49,20 @@ export default function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-10">
-      <header className="mb-8 flex items-center justify-between">
-        <h1 className="font-display text-3xl">BATON</h1>
-        <button className="text-sm text-steel underline hover:text-brass" onClick={logout}>
-          Sign out
-        </button>
+      <header className="mb-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <BatonMark size={34} />
+            <h1 className="font-display text-3xl tracking-tight">BATON</h1>
+          </div>
+          <button
+            className="text-sm text-steel transition hover:text-brass"
+            onClick={logout}
+          >
+            Sign out
+          </button>
+        </div>
+        <div className="hairline mt-5" />
       </header>
       {meta ? (
         <Dashboard meta={meta} address={address} onReset={reload} />

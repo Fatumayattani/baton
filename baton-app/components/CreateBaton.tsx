@@ -81,6 +81,7 @@ export default function CreateBaton({ onCreated }: Props) {
       <p className="mt-1 text-sm text-steel">
         Choose who receives what. You stay in full control until the very end.
       </p>
+      <div className="hairline mt-5" />
 
       <div className="mt-6 space-y-4">
         {heirs.map((h, i) => (
@@ -142,7 +143,8 @@ export default function CreateBaton({ onCreated }: Props) {
         </div>
       </div>
 
-      <div className="mt-8 border-t border-steel/20 pt-6">
+      <div className="mt-8 pt-2">
+        <div className="hairline mb-6" />
         <div className="flex items-center justify-between">
           <div>
             <p className="font-semibold">Demo Mode</p>

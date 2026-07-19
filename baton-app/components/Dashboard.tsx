@@ -138,12 +138,12 @@ export default function Dashboard({ meta, address, onReset }: Props) {
   const expired = remaining !== null && remaining <= 0;
 
   const status = cancelled
-    ? { text: "CANCELLED", cls: "text-steel" }
+    ? { text: "Cancelled", cls: "bg-steel/10 text-steel", dot: "bg-steel" }
     : activated
-    ? { text: "PASSED ON", cls: "text-brass" }
+    ? { text: "Passed on", cls: "bg-brass/15 text-brass", dot: "bg-brass" }
     : expired
-    ? { text: "READY TO PASS", cls: "text-brass" }
-    : { text: "ACTIVE", cls: "text-emerald-400" };
+    ? { text: "Ready to pass", cls: "bg-brass/15 text-brass", dot: "bg-brass animate-dot" }
+    : { text: "Active", cls: "bg-emerald-400/10 text-emerald-400", dot: "bg-emerald-400 animate-dot" };
 
   return (
     <div className="space-y-6">
@@ -152,14 +152,15 @@ export default function Dashboard({ meta, address, onReset }: Props) {
         <div className="flex items-start justify-between">
           <div>
             <h2 className="font-display text-2xl">Your Baton</h2>
-            <p className={`mt-1 text-sm font-bold uppercase tracking-widest ${status.cls}`}>
-              {status.text}
+            <div className="mt-2 flex items-center gap-2">
+              <span className={`pill ${status.cls}`}>
+                <span className={`pill-dot ${status.dot}`} />
+                {status.text}
+              </span>
               {meta.demoMode && !cancelled && (
-                <span className="ml-2 rounded bg-brass/20 px-2 py-0.5 text-xs text-brass">
-                  Demo Mode
-                </span>
+                <span className="pill bg-steel/10 text-steel">Demo Mode</span>
               )}
-            </p>
+            </div>
           </div>
           <p className="text-right text-xs text-steel">
             Estate #{id} on Arbitrum Sepolia
@@ -179,11 +180,21 @@ export default function Dashboard({ meta, address, onReset }: Props) {
             <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="label">Last heartbeat</p>
-                <p>{lastBeat ? lastBeat.toLocaleString() : "…"}</p>
+                <p className="tnum text-sm text-cream/90">
+                  {lastBeat ? lastBeat.toLocaleString() : "…"}
+                </p>
               </div>
               <div>
                 <p className="label">Time remaining</p>
-                <p className={expired ? "font-bold text-brass" : ""}>
+                <p
+                  className={`font-display tnum text-2xl ${
+                    expired
+                      ? "text-brass"
+                      : remaining !== null && remaining < 45
+                      ? "text-brass animate-glow"
+                      : ""
+                  }`}
+                >
                   {remaining === null ? "…" : fmtCountdown(remaining)}
                 </p>
               </div>
@@ -200,12 +211,12 @@ export default function Dashboard({ meta, address, onReset }: Props) {
         <h2 className="font-display text-2xl">Protected estate</h2>
         <div className="mt-4 flex gap-10">
           <div>
-            <p className="font-display text-3xl">{Number(ethBal).toFixed(4)}</p>
-            <p className="text-sm text-steel">ETH</p>
+            <p className="font-display tnum text-4xl">{Number(ethBal).toFixed(4)}</p>
+            <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-steel">ETH</p>
           </div>
           <div>
-            <p className="font-display text-3xl">{Number(usdcBal).toFixed(2)}</p>
-            <p className="text-sm text-steel">mUSDC</p>
+            <p className="font-display tnum text-4xl">{Number(usdcBal).toFixed(2)}</p>
+            <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-steel">mUSDC</p>
           </div>
         </div>
 
@@ -258,7 +269,7 @@ export default function Dashboard({ meta, address, onReset }: Props) {
           {meta.heirs.map((h, i) => (
             <div
               key={i}
-              className="flex items-center justify-between rounded-xl border border-steel/20 px-4 py-3"
+              className="flex items-center justify-between rounded-xl border border-steel/20 bg-ink/30 px-4 py-3 transition hover:border-brass/40"
             >
               <div>
                 <p className="font-semibold">
