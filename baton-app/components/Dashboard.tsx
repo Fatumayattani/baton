@@ -41,13 +41,14 @@ export default function Dashboard({ meta, address, onReset }: Props) {
       const baton = batonRead();
       const usdc = usdcRead();
       const provider = baton.runner!.provider!;
+      const hasAddr = !!address && address.startsWith("0x");
       const [e, ethB, usdcB, rem, wEth, wUsdc] = await Promise.all([
         baton.estates(id),
         baton.balances(id, ETH_TOKEN),
         baton.balances(id, USDC_ADDRESS),
         baton.timeRemaining(id),
-        provider.getBalance(address),
-        usdc.balanceOf(address),
+        hasAddr ? provider.getBalance(address) : Promise.resolve(0n),
+        hasAddr ? usdc.balanceOf(address) : Promise.resolve(0n),
       ]);
       setLastBeat(new Date(Number(e.lastHeartbeat) * 1000));
       setActivated(e.activated);
@@ -147,10 +148,73 @@ export default function Dashboard({ meta, address, onReset }: Props) {
 
   return (
     <div className="space-y-6">
+      {/* Protected estate */}
+      <div className="card">
+        <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.24em] text-brass/80">Step 1 · Fund it</p>
+        <h2 className="font-display text-2xl">Protected estate</h2>
+        {Number(ethBal) === 0 && Number(usdcBal) === 0 && !activated && !cancelled && (
+          <p className="mt-2 text-sm text-steel">
+            Your estate is empty. Start below: mint test mUSDC, then add assets.
+          </p>
+        )}
+        <div className="mt-4 flex gap-10">
+          <div>
+            <p className="font-display tnum text-4xl">{Number(ethBal).toFixed(4)}</p>
+            <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-steel">ETH</p>
+          </div>
+          <div>
+            <p className="font-display tnum text-4xl">{Number(usdcBal).toFixed(2)}</p>
+            <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-steel">mUSDC</p>
+          </div>
+        </div>
+
+        {!activated && !cancelled && (
+          <>
+            <div className="mt-6 grid grid-cols-2 gap-4">
+              <div>
+                <label className="label">Add ETH</label>
+                <div className="flex gap-2">
+                  <input
+                    className="input"
+                    value={depositEthAmt}
+                    onChange={(e) => setDepositEthAmt(e.target.value)}
+                  />
+                  <button className="btn-ghost" onClick={depositEth} disabled={!!busy}>
+                    {busy === "depEth" ? "…" : "Add"}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label className="label">Add mUSDC</label>
+                <div className="flex gap-2">
+                  <input
+                    className="input"
+                    value={depositUsdcAmt}
+                    onChange={(e) => setDepositUsdcAmt(e.target.value)}
+                  />
+                  <button className="btn-ghost" onClick={depositUsdc} disabled={!!busy}>
+                    {busy === "depUsdc" ? "…" : "Add"}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-between text-xs text-steel">
+              <p>
+                Wallet: {Number(walletEth).toFixed(4)} ETH · {Number(walletUsdc).toFixed(2)} mUSDC
+              </p>
+              <button className="underline hover:text-brass" onClick={getTestUsdc} disabled={!!busy}>
+                {busy === "faucet" ? "Minting…" : "Get 1,000 test mUSDC"}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
       {/* Your Baton */}
       <div className="card">
         <div className="flex items-start justify-between">
           <div>
+            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.24em] text-brass/80">Step 2 · Carry it</p>
             <h2 className="font-display text-2xl">Your Baton</h2>
             <div className="mt-2 flex items-center gap-2">
               <span className={`pill ${status.cls}`}>
@@ -206,64 +270,9 @@ export default function Dashboard({ meta, address, onReset }: Props) {
         )}
       </div>
 
-      {/* Protected estate */}
-      <div className="card">
-        <h2 className="font-display text-2xl">Protected estate</h2>
-        <div className="mt-4 flex gap-10">
-          <div>
-            <p className="font-display tnum text-4xl">{Number(ethBal).toFixed(4)}</p>
-            <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-steel">ETH</p>
-          </div>
-          <div>
-            <p className="font-display tnum text-4xl">{Number(usdcBal).toFixed(2)}</p>
-            <p className="mt-1 text-xs font-bold uppercase tracking-[0.18em] text-steel">mUSDC</p>
-          </div>
-        </div>
-
-        {!activated && !cancelled && (
-          <>
-            <div className="mt-6 grid grid-cols-2 gap-4">
-              <div>
-                <label className="label">Add ETH</label>
-                <div className="flex gap-2">
-                  <input
-                    className="input"
-                    value={depositEthAmt}
-                    onChange={(e) => setDepositEthAmt(e.target.value)}
-                  />
-                  <button className="btn-ghost" onClick={depositEth} disabled={!!busy}>
-                    {busy === "depEth" ? "…" : "Add"}
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label className="label">Add mUSDC</label>
-                <div className="flex gap-2">
-                  <input
-                    className="input"
-                    value={depositUsdcAmt}
-                    onChange={(e) => setDepositUsdcAmt(e.target.value)}
-                  />
-                  <button className="btn-ghost" onClick={depositUsdc} disabled={!!busy}>
-                    {busy === "depUsdc" ? "…" : "Add"}
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between text-xs text-steel">
-              <p>
-                Wallet: {Number(walletEth).toFixed(4)} ETH · {Number(walletUsdc).toFixed(2)} mUSDC
-              </p>
-              <button className="underline hover:text-brass" onClick={getTestUsdc} disabled={!!busy}>
-                {busy === "faucet" ? "Minting…" : "Get 1,000 test mUSDC"}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-
       {/* Beneficiaries */}
       <div className="card">
+        <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.24em] text-brass/80">Step 3 · Pass it on</p>
         <h2 className="font-display text-2xl">Beneficiaries</h2>
         <div className="mt-4 space-y-3">
           {meta.heirs.map((h, i) => (

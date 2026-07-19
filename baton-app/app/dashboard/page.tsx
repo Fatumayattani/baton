@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import BatonMark from "@/components/BatonMark";
 import CreateBaton from "@/components/CreateBaton";
 import Dashboard from "@/components/Dashboard";
-import { getMagic, loadMeta, type BatonMeta } from "@/lib/baton";
+import { getMagic, getSigner, loadMeta, type BatonMeta } from "@/lib/baton";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -24,7 +24,12 @@ export default function DashboardPage() {
           return;
         }
         const info = await magic.user.getInfo();
-        setAddress(info.publicAddress || "");
+        let addr = info.publicAddress || "";
+        if (!addr) {
+          const signer = await getSigner();
+          addr = await signer.getAddress();
+        }
+        setAddress(addr);
         setMeta(loadMeta());
         setReady(true);
       } catch (e) {
