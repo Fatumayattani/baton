@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="baton_cover.png" alt="Baton" width="720" />
+</p>
+
 # Baton
 
 **Self custody that outlives you.**
@@ -6,7 +10,18 @@ Crypto gives complete ownership while you are alive and almost no usable handove
 
 Baton is a revocable onchain estate. Place assets in it, name your beneficiaries, and confirm you are active with a periodic heartbeat. If you go silent past your heartbeat interval and grace period, the estate unlocks and the people you chose claim their share by signing in with the email they already have. No seed phrases. No bridges. No gas purchases. No crypto knowledge required to inherit.
 
-Built for the UXmaxx Hackathon 2026.
+Built solo for the UXmaxx Hackathon 2026.
+
+## Links
+
+| What | Where |
+| --- | --- |
+| Live app | https://batonhq.vercel.app |
+| Pitch deck (10 slides) | https://batonhq.vercel.app/pitch |
+| Documentation | https://batonhq.vercel.app/docs |
+| Demo video | ADD_YOUTUBE_LINK_HERE |
+| BatonEstate contract | https://sepolia.arbiscan.io/address/0x26134528c56099B50Cf29af629389d1DCb192334 |
+| MockUSDC contract | https://sepolia.arbiscan.io/address/0xb0BA9513cfbfad27EA231e0a9EdA4142CE548B7E |
 
 ## How it works
 
@@ -16,7 +31,7 @@ Built for the UXmaxx Hackathon 2026.
 4. **Pass.** After the clock and grace period lapse, anyone can activate the estate (or only the guardian, if set). Balances snapshot so claim order cannot change shares.
 5. **Receive.** Each beneficiary opens their claim link, signs in with their own email, and accepts. Magic creates their wallet on the spot, the app sponsors their gas invisibly, and the contract pays out their percentage.
 
-## Deployed contracts (Arbitrum Sepolia)
+## Deployed contracts (Arbitrum Sepolia, chain id 421614)
 
 | Contract | Address |
 | --- | --- |
@@ -36,7 +51,8 @@ baton-app/            Next.js 14 app
   app/dashboard/        owner: create, fund, heartbeat, links, revoke
   app/claim/            beneficiary: sign in, sponsored gas, accept
   app/api/gas/          server route sponsoring heir gas (testnet convenience)
-  app/docs, app/pitch   documentation and pitch pages
+  app/docs              documentation with sidebar navigation
+  app/pitch             10 slide pitch deck
 ```
 
 **Contract design.** Beneficiaries are stored as keccak256 commitments of claim secrets with shares in basis points totalling 10,000. Expiry is `lastHeartbeat + interval + grace` judged by block time, so no server or cron is trusted. Activation snapshots balances; `claim(estateId, index, secret)` pays the share of the snapshot to `msg.sender` when the secret matches, binding the heir wallet at claim time (heirs are named by email, so their address cannot be known in advance). Withdraw and cancel work any time before activation, never after. All value paths are reentrancy guarded.
@@ -55,7 +71,7 @@ forge test                          # 20 passing
 # app
 cd baton-app
 npm install
-cp .env.example .env.local          # then fill in values
+# create .env.local with the values below
 npm run dev                         # http://localhost:3000
 ```
 
