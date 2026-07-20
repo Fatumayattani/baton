@@ -19,7 +19,6 @@ Built solo for the UXmaxx Hackathon 2026.
 | Live app | https://batonhq.vercel.app |
 | Pitch deck (10 slides) | https://batonhq.vercel.app/pitch |
 | Documentation | https://batonhq.vercel.app/docs |
-| Demo video | ADD_YOUTUBE_LINK_HERE |
 | BatonEstate contract | https://sepolia.arbiscan.io/address/0x26134528c56099B50Cf29af629389d1DCb192334 |
 | MockUSDC contract | https://sepolia.arbiscan.io/address/0xb0BA9513cfbfad27EA231e0a9EdA4142CE548B7E |
 
